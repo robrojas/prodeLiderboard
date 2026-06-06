@@ -4,6 +4,18 @@
  */
 const PRODE_WINNERS = [
   {
+    id: "wc-2026",
+    tournament: "Copa Mundial",
+    edition: "USA/México 2026",
+    year: 2026,
+    type: "mundial",
+    logo: "assets/img/mundial_2026.jpg",
+    logoPosition: "center",
+    winner: {
+      name: "Por definir",
+    },
+  },
+  {
     id: "mcc-2025",
     tournament: "Mundial de Clubes",
     edition: "FIFA 2025",

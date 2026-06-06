@@ -149,10 +149,11 @@ function createCard(entry) {
 
 function updateStats(data) {
   const uniqueWinners = new Set(data.map((e) => e.winner.name)).size;
-  document.getElementById("stat-tournaments").textContent = data.length;
-  document.getElementById("stat-winners").textContent = uniqueWinners;
-  document.getElementById("stat-years").textContent =
-    data[data.length - 1]?.year + "–" + data[0]?.year;
+  const tournamentsEl = document.getElementById("stat-tournaments");
+  const winnersEl = document.getElementById("stat-winners");
+  
+  if (tournamentsEl) tournamentsEl.textContent = data.length;
+  if (winnersEl) winnersEl.textContent = uniqueWinners;
 }
 
 function setupFilters(cards) {

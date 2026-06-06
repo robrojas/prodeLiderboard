@@ -118,36 +118,30 @@ button {
   font-weight: 300;
 }
 
+/* ── Introducción ─────────────────────────────────────────── */
+.intro {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+
 /* ── Stats ─────────────────────────────────────────────────── */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.65rem;
-  margin-bottom: 1.75rem;
+  display: none;
 }
 
 .stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 0.5rem;
-  text-align: center;
+  display: none;
 }
 
 .stat__value {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--accent);
+  display: none;
 }
 
 .stat__label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-top: 0.15rem;
+  display: none;
 }
 
 /* ── Filters ───────────────────────────────────────────────── */
@@ -232,6 +226,28 @@ button {
 
 .card__tournament--mundial {
   background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 60%, #1a2744 100%);
+}
+
+.card__tournament--mundial .card__tournament-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.card__tournament--mundial .card__tournament-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  mix-blend-mode: screen;
+  opacity: 0.38;
+  filter: none;
+}
+
+.card__tournament--mundial:hover .card__tournament-logo {
+  transform: scale(1.04);
 }
 
 .card__tournament--euro {
