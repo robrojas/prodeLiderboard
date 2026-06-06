@@ -1,0 +1,523 @@
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+  --bg: #08090c;
+  --bg-elevated: #111318;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f0f0f2;
+  --text-muted: #8b8d97;
+  --accent: #c9a84c;
+  --accent-soft: rgba(201, 168, 76, 0.15);
+  --mundial: #3b82f6;
+  --euro: #8b5cf6;
+  --copa: #10b981;
+  --mundial-clubes: #f59e0b;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: "Outfit", system-ui, sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Reset & base ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 168, 76, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59, 130, 246, 0.05), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+/* ── Layout ────────────────────────────────────────────────── */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem calc(2.5rem + var(--safe-bottom));
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.header__title {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.header__title span {
+  background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header__subtitle {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* ── Stats ─────────────────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+}
+
+.stat__value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.stat__label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* ── Filters ───────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.25rem;
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.filter-btn.active {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Cards grid ────────────────────────────────────────────── */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    border-color 0.2s ease;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card.hidden {
+  display: none;
+}
+
+/* Tournament header */
+.card__tournament {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card__tournament--mundial {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 60%, #1a2744 100%);
+}
+
+.card__tournament--euro {
+  background: linear-gradient(135deg, #3b1f6e 0%, #1a0f2e 60%, #2d1b4e 100%);
+}
+
+.card__tournament--euro .card__tournament-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.card__tournament--euro .card__tournament-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  mix-blend-mode: multiply;
+  opacity: 0.42;
+  filter: none;
+}
+
+.card__tournament--euro:hover .card__tournament-logo {
+  transform: scale(1.04);
+}
+
+.card__tournament--copa-america {
+  background: linear-gradient(135deg, #064e3b 0%, #0a1f17 60%, #0d3328 100%);
+}
+
+.card__tournament--copa-america .card__tournament-logo,
+.card__tournament--mundial-clubes .card__tournament-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.card__tournament--copa-america .card__tournament-img,
+.card__tournament--mundial-clubes .card__tournament-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  mix-blend-mode: screen;
+  opacity: 0.38;
+  filter: none;
+}
+
+.card__tournament--copa-america:hover .card__tournament-logo,
+.card__tournament--mundial-clubes:hover .card__tournament-logo {
+  transform: scale(1.04);
+}
+
+.card__tournament--mundial-clubes {
+  background: linear-gradient(135deg, #78350f 0%, #1c1410 60%, #292018 100%);
+}
+
+.card__tournament-logo {
+  position: relative;
+  z-index: 1;
+  width: min(220px, 78%);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .card__tournament-logo {
+  transform: scale(1.05);
+}
+
+.card__tournament-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+}
+
+.card__tournament-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  opacity: 0.6;
+}
+
+.card__tournament-fallback--mundial {
+  background: linear-gradient(135deg, #1e3a5f, #0f172a);
+}
+
+.card__tournament-fallback--euro {
+  background: linear-gradient(135deg, #3b1f6e, #1a0f2e);
+}
+
+.card__tournament-fallback--copa-america {
+  background: linear-gradient(135deg, #064e3b, #0a1f17);
+}
+
+.card__tournament-fallback--mundial-clubes {
+  background: linear-gradient(135deg, #78350f, #1c1410);
+}
+
+.card__tournament-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(to top, var(--bg-elevated) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.card__tournament-info {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 3;
+}
+
+.card__type-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.35rem;
+}
+
+.card__type-badge--mundial {
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+}
+
+.card__type-badge--euro {
+  background: rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+}
+
+.card__type-badge--copa-america {
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+}
+
+.card__type-badge--mundial-clubes {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fcd34d;
+}
+
+.card__tournament-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.card__edition {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+/* Winner section */
+.card__winner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.card__avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(201, 168, 76, 0.05));
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.card__winner-info {
+  min-width: 0;
+}
+
+.card__winner-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.card__winner-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__crown {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.4));
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  display: none;
+}
+
+.empty-state.visible {
+  display: block;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Tablet+ ───────────────────────────────────────────────── */
+@media (min-width: 540px) {
+  .page {
+    padding: 2.5rem 1.5rem calc(3rem + var(--safe-bottom));
+  }
+
+  .card__tournament {
+    height: 160px;
+  }
+
+  .card__tournament-logo {
+    height: 64px;
+    width: min(240px, 78%);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card:nth-child(odd):last-child {
+    grid-column: 1 / -1;
+    max-width: calc(50% - 0.575rem);
+    justify-self: center;
+  }
+}

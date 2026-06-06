@@ -1,0 +1,318 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #1e3a8a;
+    --secondary-color: #dc2626;
+    --accent-color: #fbbf24;
+    --dark-bg: #0f172a;
+    --card-bg: #1e293b;
+    --text-light: #f1f5f9;
+}
+
+body {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1f2e 100%);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+/* Header */
+.header-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.header-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(251, 191, 36, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.header-section h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Stats Section */
+.stat-card {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #fbbf24 100%);
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+    animation: slideIn 0.6s ease-out;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* Champion Cards */
+.champion-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.champion-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(251, 191, 36, 0.2);
+    border-color: var(--accent-color);
+}
+
+.card-rank {
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #f59e0b 100%);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+    z-index: 10;
+}
+
+.champion-photo {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    filter: brightness(0.9);
+    transition: filter 0.3s ease;
+}
+
+.champion-card:hover .champion-photo {
+    filter: brightness(1);
+}
+
+.card-body {
+    padding: 25px;
+    background: var(--card-bg);
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* Tournaments List */
+.tournaments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tournament-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(251, 191, 36, 0.1);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 5px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    transition: all 0.3s ease;
+}
+
+.tournament-badge:hover {
+    background: rgba(251, 191, 36, 0.2);
+    transform: translateX(5px);
+}
+
+.tournament-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+/* Footer */
+.footer-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-top: 2px solid var(--accent-color);
+    margin-top: auto;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.champion-card {
+    animation: slideIn 0.6s ease-out forwards;
+}
+
+.champion-card:nth-child(1) { animation-delay: 0.1s; }
+.champion-card:nth-child(2) { animation-delay: 0.2s; }
+.champion-card:nth-child(3) { animation-delay: 0.3s; }
+.champion-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Responsive Design - Mobile First */
+@media (max-width: 768px) {
+    .header-section h1 {
+        font-size: 2rem;
+    }
+
+    .header-section p {
+        font-size: 1rem;
+    }
+
+    .champion-card .row {
+        flex-direction: column;
+    }
+
+    .champion-card .col-md-5,
+    .champion-card .col-md-7 {
+        max-width: 100%;
+    }
+
+    .champion-photo {
+        height: 250px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .header-section {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .header-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-section p {
+        font-size: 0.9rem;
+    }
+
+    .card-rank {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .champion-photo {
+        height: 200px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.85rem;
+    }
+
+    .tournament-badge {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+
+    .tournament-logo {
+        width: 25px;
+        height: 25px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    main {
+        padding: 2rem 0 !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .header-section h1 {
+        font-size: 1.3rem;
+    }
+
+    .champion-photo {
+        height: 180px;
+    }
+}
