@@ -60,8 +60,8 @@ const PRODE_WINNERS = [
     type: "mundial",
     logo: "assets/img/wc_2022.svg",
     winner: {
-      name: "Carlos Granados Jr.",
-      photo: "assets/img/carlos_granados_jr.png",
+      name: "Katherine Gomes",
+      photo: "assets/img/katherine_gomes.png",
     },
   },
   {
