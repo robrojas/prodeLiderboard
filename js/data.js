@@ -65,6 +65,18 @@ const PRODE_WINNERS = [
     },
   },
   {
+    id: "ca-2019",
+    tournament: "Copa América",
+    edition: "Brasil 2019",
+    year: 2019,
+    type: "copa-america",
+    logo: "assets/img/copa_america_2021.jpg",
+    winner: {
+      name: "Carlos Granados Jr.",
+      photo: "assets/img/carlos_granados_jr.png",
+    },
+  },
+  {
     id: "euro-2020",
     tournament: "Eurocopa",
     edition: "Europa 2021",
