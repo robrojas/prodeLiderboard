@@ -58,6 +58,14 @@ function createPodiumInitialsEl(name, variant) {
   return el;
 }
 
+function createCelebrationInitialsEl(name) {
+  const el = document.createElement("div");
+  el.className = "celebration-overlay__avatar-initials";
+  el.textContent = getInitials(name);
+  el.setAttribute("aria-hidden", "true");
+  return el;
+}
+
 function createPodiumAvatar(winner, variant) {
   const avatar = document.createElement("div");
   avatar.className = `card__podium-avatar card__podium-avatar--${variant}`;
@@ -219,6 +227,118 @@ function createCard(entry) {
   return card;
 }
 
+function createCelebrationWinnerCard(winner, position) {
+  const card = document.createElement("div");
+  card.className = `celebration-overlay__winner celebration-overlay__winner--${position}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = "celebration-overlay__avatar";
+
+  if (winner.photo) {
+    const img = document.createElement("img");
+    img.src = winner.photo;
+    img.alt = `Foto de ${winner.name}`;
+    img.loading = "lazy";
+    img.onerror = () => {
+      avatar.innerHTML = "";
+      avatar.appendChild(createCelebrationInitialsEl(winner.name));
+    };
+    avatar.appendChild(img);
+  } else {
+    avatar.appendChild(createCelebrationInitialsEl(winner.name));
+  }
+
+  card.appendChild(avatar);
+
+  const place = document.createElement("span");
+  place.className = "celebration-overlay__winner-place";
+  place.textContent = `${winner.place}º`;
+  card.appendChild(place);
+
+  const name = document.createElement("p");
+  name.className = "celebration-overlay__winner-name";
+  name.textContent = winner.name;
+  card.appendChild(name);
+
+  return card;
+}
+
+function startCelebrationOverlay() {
+  const overlay = document.getElementById("celebration-overlay");
+  const intro = document.getElementById("celebration-intro");
+  const introLogo = document.getElementById("celebration-intro-logo");
+  const introName = document.getElementById("celebration-intro-name");
+  const title = document.getElementById("celebration-title");
+  const winnersContainer = document.getElementById("celebration-winners");
+
+  if (!overlay || !winnersContainer) return;
+
+  const tournament = PRODE_WINNERS.find((entry) => entry.id === "wc-2026") || PRODE_WINNERS[0];
+  const orderedWinners = [...(tournament?.winners || [])].sort((a, b) => a.place - b.place);
+
+  if (introLogo && introName && tournament) {
+    introLogo.innerHTML = "";
+    if (tournament.logo) {
+      const logo = document.createElement("img");
+      logo.src = tournament.logo;
+      logo.alt = `${tournament.tournament} ${tournament.edition}`;
+      logo.loading = "lazy";
+      introLogo.appendChild(logo);
+    } else {
+      introLogo.textContent = TYPE_ICONS[tournament.type] || "⚽";
+    }
+    introName.textContent = `${tournament.tournament} ${tournament.edition}`;
+  }
+
+  winnersContainer.innerHTML = "";
+  orderedWinners.forEach((winner, index) => {
+    const card = createCelebrationWinnerCard(winner, index + 1);
+    winnersContainer.appendChild(card);
+  });
+
+  const sparkCount = 6;
+  for (let i = 0; i < sparkCount; i += 1) {
+    const spark = document.createElement("div");
+    spark.className = `celebration-overlay__spark celebration-overlay__spark--${i + 1}`;
+    overlay.appendChild(spark);
+  }
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("visible");
+  });
+
+  const cards = Array.from(winnersContainer.children);
+  const [first, second, third] = cards;
+
+  const revealSequence = () => {
+    window.setTimeout(() => {
+      if (intro) intro.classList.add("is-hidden");
+      if (title) title.classList.add("visible");
+      winnersContainer.classList.add("visible");
+    }, 2200);
+
+    if (first) {
+      window.setTimeout(() => first.classList.add("active"), 2600);
+    }
+    if (second) {
+      window.setTimeout(() => second.classList.add("active"), 3600);
+    }
+    if (third) {
+      window.setTimeout(() => third.classList.add("active"), 4600);
+    }
+
+    window.setTimeout(() => {
+      cards.forEach((card) => card.classList.add("podium"));
+    }, 5600);
+  };
+
+  revealSequence();
+
+  window.setTimeout(() => {
+    overlay.classList.add("hidden");
+  }, 10000);
+}
+
 function updateStats(data) {
   const uniqueWinners = new Set(data.map((e) => e.winner.name)).size;
   const tournamentsEl = document.getElementById("stat-tournaments");
@@ -277,6 +397,7 @@ function init() {
 
   cards.forEach((card) => container.appendChild(card));
 
+  startCelebrationOverlay();
   updateStats(sorted);
   setupFilters(cards);
   setupScrollReveal(cards);

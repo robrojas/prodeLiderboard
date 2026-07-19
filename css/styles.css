@@ -53,6 +53,349 @@ body::before {
   z-index: 0;
 }
 
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1.25rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  min-height: 100dvh;
+  transform: translateY(0);
+}
+
+.celebration-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.celebration-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.celebration-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top center, rgba(255, 215, 0, 0.22), transparent 32%),
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.24), transparent 24%),
+    radial-gradient(circle at 80% 25%, rgba(236, 72, 153, 0.2), transparent 22%),
+    linear-gradient(135deg, #07111f 0%, #10182b 45%, #1c1430 100%);
+  animation: celebrationPulse 4.8s ease-in-out infinite;
+}
+
+.celebration-overlay__guirnaldas {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  height: 90px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.04);
+  opacity: 0.95;
+  transform-origin: center;
+}
+
+.celebration-overlay__guirnaldas::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 0 10px,
+    rgba(248, 113, 113, 0.18) 10px 20px,
+    rgba(250, 204, 21, 0.18) 20px 30px,
+    rgba(34, 197, 94, 0.18) 30px 40px
+  );
+  opacity: 0.85;
+}
+
+.celebration-overlay__guirnaldas--top {
+  top: 2rem;
+  animation: guirnaldasSwing 4.2s ease-in-out infinite;
+}
+
+.celebration-overlay__guirnaldas--bottom {
+  bottom: 2rem;
+  transform: rotate(180deg);
+  animation: guirnaldasSwing 3.8s ease-in-out infinite reverse;
+}
+
+.celebration-overlay__intro {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.35rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.celebration-overlay__intro.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.96);
+  pointer-events: none;
+}
+
+.celebration-overlay__intro-logo {
+  width: min(220px, 46vw);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+}
+
+.celebration-overlay__intro-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.celebration-overlay__intro-name {
+  font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff8c7;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.32);
+}
+
+.celebration-overlay__title {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateY(72px);
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff8c7;
+  text-shadow: 0 0 22px rgba(255, 215, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  text-align: center;
+  pointer-events: none;
+}
+
+.celebration-overlay__title.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(-90px);
+}
+
+.celebration-overlay__winners {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateY(58px);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 0.8rem;
+  width: min(100%, 760px);
+  align-items: center;
+  min-height: 240px;
+  place-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.celebration-overlay__winners.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.celebration-overlay__winner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  transform: translateY(24px) scale(0.95);
+  transition: transform 0.65s ease, opacity 0.65s ease, filter 0.65s ease;
+  min-height: 180px;
+  will-change: transform, opacity;
+}
+
+.celebration-overlay__winner.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.celebration-overlay__winner--1 {
+  order: 2;
+  transform: translateY(22px) scale(0.95);
+}
+
+.celebration-overlay__winner--2 {
+  order: 1;
+  transform: translateY(30px) scale(0.93);
+}
+
+.celebration-overlay__winner--3 {
+  order: 3;
+  transform: translateY(30px) scale(0.93);
+}
+
+.celebration-overlay__winner--1.active {
+  transform: translateY(0) scale(1.08);
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.28));
+}
+
+.celebration-overlay__winner--2.active,
+.celebration-overlay__winner--3.active {
+  transform: translateY(10px) scale(0.96);
+}
+
+.celebration-overlay__winner.podium {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.celebration-overlay__winner--1 .celebration-overlay__avatar {
+  width: 112px;
+  height: 112px;
+}
+
+.celebration-overlay__winner--2 .celebration-overlay__avatar {
+  width: 82px;
+  height: 82px;
+}
+
+.celebration-overlay__winner--3 .celebration-overlay__avatar {
+  width: 72px;
+  height: 72px;
+}
+
+.celebration-overlay__avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255, 215, 0, 0.7);
+  box-shadow: 0 0 0 5px rgba(255, 215, 0, 0.14), 0 18px 30px rgba(0, 0, 0, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.celebration-overlay__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.celebration-overlay__avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff7c0;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.35), rgba(255, 255, 255, 0.08));
+}
+
+.celebration-overlay__winner-place {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ffe783;
+}
+
+.celebration-overlay__winner-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+  line-height: 1.2;
+  max-width: 100%;
+}
+
+.celebration-overlay__spark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff4a3;
+  box-shadow: 0 0 16px currentColor;
+  animation: sparkBurst 1.8s ease-out forwards;
+  opacity: 0;
+}
+
+.celebration-overlay__spark--1 { left: 10%; top: 18%; animation-delay: 0.2s; }
+.celebration-overlay__spark--2 { left: 26%; top: 24%; animation-delay: 0.5s; }
+.celebration-overlay__spark--3 { left: 78%; top: 16%; animation-delay: 0.3s; }
+.celebration-overlay__spark--4 { left: 14%; top: 74%; animation-delay: 0.7s; }
+.celebration-overlay__spark--5 { left: 68%; top: 72%; animation-delay: 0.4s; }
+.celebration-overlay__spark--6 { left: 50%; top: 12%; animation-delay: 0.6s; }
+
+@keyframes celebrationPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes guirnaldasSwing {
+  0%, 100% { transform: rotate(-2deg) translateX(0); }
+  50% { transform: rotate(2deg) translateX(8px); }
+}
+
+@keyframes titleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes subtitleFade {
+  0%, 100% { opacity: 0.8; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+
+@keyframes winnerRise {
+  0% { opacity: 0; transform: translateY(26px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes sparkBurst {
+  0% { opacity: 0; transform: scale(0.2) translateY(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.7) translateY(120px); }
+}
+
 img {
   display: block;
   max-width: 100%;
