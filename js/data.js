@@ -28,8 +28,9 @@ const PRODE_WINNERS = [
       },
       {
         place: 3,
-        name: "Andrés Granados",
-        photo: "assets/img/andres_granados.png",
+        names: ["Jorge Granados", "Andrés Granados", "Carlos Granados Jr."],
+        name: "Jorge Granados · Andrés Granados · Carlos Granados Jr.",
+        photo: "",
       },
     ],
   },

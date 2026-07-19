@@ -66,6 +66,86 @@ function createCelebrationInitialsEl(name) {
   return el;
 }
 
+function createSharedNameList(winner, baseClass) {
+  const list = document.createElement("div");
+  list.className = `${baseClass}`;
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    const sharedNamePhotoMap = {
+      "Andrés Granados": "assets/img/andres_granados.png",
+      "Carlos Granados Jr.": "assets/img/carlos_granados_jr.png",
+      "Jorge Granados": "assets/img/jorge_granados.png",
+    };
+
+    const sharedWinners = [...winner.names]
+      .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }))
+      .map((name) => ({
+        name,
+        photo: sharedNamePhotoMap[name] || "",
+      }));
+
+    sharedWinners.forEach((sharedWinner) => {
+      const line = document.createElement("div");
+      line.className = `${baseClass}__row`;
+
+      const avatar = document.createElement("div");
+      avatar.className = `${baseClass}__avatar`;
+
+      if (sharedWinner.photo) {
+        const img = document.createElement("img");
+        img.src = sharedWinner.photo;
+        img.alt = `Foto de ${sharedWinner.name}`;
+        img.loading = "lazy";
+        img.onerror = () => {
+          avatar.innerHTML = "";
+          avatar.textContent = getInitials(sharedWinner.name);
+        };
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = getInitials(sharedWinner.name);
+      }
+
+      const label = document.createElement("span");
+      label.className = `${baseClass}__line`;
+      label.textContent = sharedWinner.name;
+
+      line.appendChild(avatar);
+      line.appendChild(label);
+      list.appendChild(line);
+    });
+  } else {
+    const line = document.createElement("div");
+    line.className = `${baseClass}__row`;
+
+    const avatar = document.createElement("div");
+    avatar.className = `${baseClass}__avatar`;
+
+    if (winner.photo) {
+      const img = document.createElement("img");
+      img.src = winner.photo;
+      img.alt = `Foto de ${winner.name}`;
+      img.loading = "lazy";
+      img.onerror = () => {
+        avatar.innerHTML = "";
+        avatar.textContent = getInitials(winner.name || "");
+      };
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = getInitials(winner.name || "");
+    }
+
+    const label = document.createElement("span");
+    label.className = `${baseClass}__line`;
+    label.textContent = winner.name || "";
+
+    line.appendChild(avatar);
+    line.appendChild(label);
+    list.appendChild(line);
+  }
+
+  return list;
+}
+
 function createPodiumAvatar(winner, variant) {
   const avatar = document.createElement("div");
   avatar.className = `card__podium-avatar card__podium-avatar--${variant}`;
@@ -101,9 +181,15 @@ function createPodiumWinner(winner, variant) {
   place.textContent = `${winner.place}º`;
   info.appendChild(place);
 
-  const name = document.createElement("p");
+  const name = document.createElement("div");
   name.className = `card__podium-name card__podium-name--${variant}`;
-  name.textContent = winner.name;
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    name.appendChild(createSharedNameList(winner, "card__podium-name-list"));
+  } else {
+    name.textContent = winner.name;
+  }
+
   info.appendChild(name);
 
   const stage = document.createElement("div");
@@ -255,9 +341,15 @@ function createCelebrationWinnerCard(winner, position) {
   place.textContent = `${winner.place}º`;
   card.appendChild(place);
 
-  const name = document.createElement("p");
+  const name = document.createElement("div");
   name.className = "celebration-overlay__winner-name";
-  name.textContent = winner.name;
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    name.appendChild(createSharedNameList(winner, "celebration-overlay__winner-list"));
+  } else {
+    name.textContent = winner.name;
+  }
+
   card.appendChild(name);
 
   return card;

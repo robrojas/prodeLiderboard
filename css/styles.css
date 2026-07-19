@@ -298,8 +298,7 @@ body::before {
 }
 
 .celebration-overlay__winner--3 .celebration-overlay__avatar {
-  width: 72px;
-  height: 72px;
+  display: none;
 }
 
 .celebration-overlay__avatar {
@@ -345,6 +344,56 @@ body::before {
   color: #fff;
   line-height: 1.2;
   max-width: 100%;
+}
+
+.celebration-overlay__winner-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.celebration-overlay__winner-list__row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  width: 100%;
+  padding: 0.28rem 0.26rem;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.celebration-overlay__winner-list__avatar {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.celebration-overlay__winner-list__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.celebration-overlay__winner-list__line {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.12;
+  text-align: center;
+  white-space: normal;
+  color: #fff;
 }
 
 .celebration-overlay__spark {
@@ -864,6 +913,10 @@ button {
   transform: translateY(6px);
 }
 
+.card__podium-item--3 .card__podium-avatar {
+  display: none;
+}
+
 .card__podium-medal {
   font-size: 1rem;
   line-height: 1;
@@ -874,34 +927,34 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
   background: rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
 .card__podium-avatar--1 {
-  width: 102px;
-  height: 102px;
+  width: 104px;
+  height: 104px;
   border-width: 3px;
   box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.18);
 }
 
-.card__podium-avatar--2 {
-  width: 72px;
-  height: 72px;
-}
-
+.card__podium-avatar--2,
 .card__podium-avatar--3 {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
 }
 
 .card__podium-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .card__podium-avatar-initials {
@@ -945,12 +998,81 @@ button {
   max-width: 100%;
 }
 
+.card__podium-name-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.38rem;
+  width: 100%;
+}
+
+.card__podium-name-list__row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.38rem;
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.card__podium-name-list__avatar {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.3), rgba(255, 255, 255, 0.07));
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.card__podium-name-list__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.card__podium-name--3 .card__podium-name-list__avatar {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+  min-width: 1.2rem;
+  min-height: 1.2rem;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+.card__podium-name-list__line {
+  width: 100%;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  color: var(--text);
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .card__podium-name--1 {
   font-size: 1.02rem;
 }
 
 .card__podium-name--3 {
   font-size: 0.8rem;
+}
+
+.card__podium-name--3 .card__podium-name-list__line {
+  font-size: 0.72rem;
 }
 
 .card__podium-stage {
