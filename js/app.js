@@ -50,6 +50,156 @@ function createInitialsEl(name) {
   return el;
 }
 
+function createPodiumInitialsEl(name, variant) {
+  const el = document.createElement("div");
+  el.className = `card__podium-avatar-initials card__podium-avatar-initials--${variant}`;
+  el.textContent = getInitials(name);
+  el.setAttribute("aria-hidden", "true");
+  return el;
+}
+
+function createCelebrationInitialsEl(name) {
+  const el = document.createElement("div");
+  el.className = "celebration-overlay__avatar-initials";
+  el.textContent = getInitials(name);
+  el.setAttribute("aria-hidden", "true");
+  return el;
+}
+
+function createSharedNameList(winner, baseClass) {
+  const list = document.createElement("div");
+  list.className = `${baseClass}`;
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    const sharedNamePhotoMap = {
+      "Andrés Granados": "assets/img/andres_granados.png",
+      "Carlos Granados Jr.": "assets/img/carlos_granados_jr.png",
+      "Jorge Granados": "assets/img/jorge_granados.png",
+    };
+
+    const sharedWinners = [...winner.names]
+      .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }))
+      .map((name) => ({
+        name,
+        photo: sharedNamePhotoMap[name] || "",
+      }));
+
+    sharedWinners.forEach((sharedWinner) => {
+      const line = document.createElement("div");
+      line.className = `${baseClass}__row`;
+
+      const avatar = document.createElement("div");
+      avatar.className = `${baseClass}__avatar`;
+
+      if (sharedWinner.photo) {
+        const img = document.createElement("img");
+        img.src = sharedWinner.photo;
+        img.alt = `Foto de ${sharedWinner.name}`;
+        img.loading = "lazy";
+        img.onerror = () => {
+          avatar.innerHTML = "";
+          avatar.textContent = getInitials(sharedWinner.name);
+        };
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = getInitials(sharedWinner.name);
+      }
+
+      const label = document.createElement("span");
+      label.className = `${baseClass}__line`;
+      label.textContent = sharedWinner.name;
+
+      line.appendChild(avatar);
+      line.appendChild(label);
+      list.appendChild(line);
+    });
+  } else {
+    const line = document.createElement("div");
+    line.className = `${baseClass}__row`;
+
+    const avatar = document.createElement("div");
+    avatar.className = `${baseClass}__avatar`;
+
+    if (winner.photo) {
+      const img = document.createElement("img");
+      img.src = winner.photo;
+      img.alt = `Foto de ${winner.name}`;
+      img.loading = "lazy";
+      img.onerror = () => {
+        avatar.innerHTML = "";
+        avatar.textContent = getInitials(winner.name || "");
+      };
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = getInitials(winner.name || "");
+    }
+
+    const label = document.createElement("span");
+    label.className = `${baseClass}__line`;
+    label.textContent = winner.name || "";
+
+    line.appendChild(avatar);
+    line.appendChild(label);
+    list.appendChild(line);
+  }
+
+  return list;
+}
+
+function createPodiumAvatar(winner, variant) {
+  const avatar = document.createElement("div");
+  avatar.className = `card__podium-avatar card__podium-avatar--${variant}`;
+
+  if (winner.photo) {
+    const img = document.createElement("img");
+    img.src = winner.photo;
+    img.alt = `Foto de ${winner.name}`;
+    img.loading = "lazy";
+    img.onerror = () => {
+      avatar.innerHTML = "";
+      avatar.appendChild(createPodiumInitialsEl(winner.name, variant));
+    };
+    avatar.appendChild(img);
+  } else {
+    avatar.appendChild(createPodiumInitialsEl(winner.name, variant));
+  }
+
+  return avatar;
+}
+
+function createPodiumWinner(winner, variant) {
+  const item = document.createElement("div");
+  item.className = `card__podium-item card__podium-item--${variant}`;
+
+  item.appendChild(createPodiumAvatar(winner, variant));
+
+  const info = document.createElement("div");
+  info.className = "card__podium-info";
+
+  const place = document.createElement("span");
+  place.className = `card__podium-place card__podium-place--${variant}`;
+  place.textContent = `${winner.place}º`;
+  info.appendChild(place);
+
+  const name = document.createElement("div");
+  name.className = `card__podium-name card__podium-name--${variant}`;
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    name.appendChild(createSharedNameList(winner, "card__podium-name-list"));
+  } else {
+    name.textContent = winner.name;
+  }
+
+  info.appendChild(name);
+
+  const stage = document.createElement("div");
+  stage.className = `card__podium-stage card__podium-stage--${variant}`;
+  info.appendChild(stage);
+
+  item.appendChild(info);
+  return item;
+}
+
 function createTournamentVisual(entry) {
   const wrap = document.createElement("div");
   wrap.className = `card__tournament card__tournament--${entry.type}`;
@@ -111,40 +261,174 @@ function createFallback(type) {
 
 function createCard(entry) {
   const card = document.createElement("article");
-  card.className = "card";
+  card.className = `card${entry.winners && entry.winners.length ? " card--wide" : ""}`;
   card.dataset.type = entry.type;
   card.dataset.year = entry.year;
 
   card.appendChild(createTournamentVisual(entry));
 
-  const winnerSection = document.createElement("div");
-  winnerSection.className = "card__winner";
+  if (entry.winners && entry.winners.length) {
+    const podium = document.createElement("div");
+    podium.className = "card__podium";
 
-  winnerSection.appendChild(createAvatar(entry.winner));
+    entry.winners
+      .slice()
+      .sort((a, b) => a.place - b.place)
+      .forEach((winner) => {
+        const variant = winner.place === 1 ? "1" : winner.place === 2 ? "2" : "3";
+        podium.appendChild(createPodiumWinner(winner, variant));
+      });
 
-  const info = document.createElement("div");
-  info.className = "card__winner-info";
+    card.appendChild(podium);
+  } else {
+    const winnerSection = document.createElement("div");
+    winnerSection.className = "card__winner";
 
-  const label = document.createElement("p");
-  label.className = "card__winner-label";
-  label.textContent = "Campeón del prode";
-  info.appendChild(label);
+    winnerSection.appendChild(createAvatar(entry.winner));
 
-  const name = document.createElement("p");
-  name.className = "card__winner-name";
-  name.textContent = entry.winner.name;
-  info.appendChild(name);
+    const info = document.createElement("div");
+    info.className = "card__winner-info";
 
-  winnerSection.appendChild(info);
+    const label = document.createElement("p");
+    label.className = "card__winner-label";
+    label.textContent = "Campeón del prode";
+    info.appendChild(label);
 
-  const crown = document.createElement("span");
-  crown.className = "card__crown";
-  crown.textContent = "👑";
-  crown.setAttribute("aria-hidden", "true");
-  winnerSection.appendChild(crown);
+    const name = document.createElement("p");
+    name.className = "card__winner-name";
+    name.textContent = entry.winner.name;
+    info.appendChild(name);
 
-  card.appendChild(winnerSection);
+    winnerSection.appendChild(info);
+
+    const crown = document.createElement("span");
+    crown.className = "card__crown";
+    crown.textContent = "👑";
+    crown.setAttribute("aria-hidden", "true");
+    winnerSection.appendChild(crown);
+
+    card.appendChild(winnerSection);
+  }
+
   return card;
+}
+
+function createCelebrationWinnerCard(winner, position) {
+  const card = document.createElement("div");
+  card.className = `celebration-overlay__winner celebration-overlay__winner--${position}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = "celebration-overlay__avatar";
+
+  if (winner.photo) {
+    const img = document.createElement("img");
+    img.src = winner.photo;
+    img.alt = `Foto de ${winner.name}`;
+    img.loading = "lazy";
+    img.onerror = () => {
+      avatar.innerHTML = "";
+      avatar.appendChild(createCelebrationInitialsEl(winner.name));
+    };
+    avatar.appendChild(img);
+  } else {
+    avatar.appendChild(createCelebrationInitialsEl(winner.name));
+  }
+
+  card.appendChild(avatar);
+
+  const place = document.createElement("span");
+  place.className = "celebration-overlay__winner-place";
+  place.textContent = `${winner.place}º`;
+  card.appendChild(place);
+
+  const name = document.createElement("div");
+  name.className = "celebration-overlay__winner-name";
+
+  if (Array.isArray(winner.names) && winner.names.length) {
+    name.appendChild(createSharedNameList(winner, "celebration-overlay__winner-list"));
+  } else {
+    name.textContent = winner.name;
+  }
+
+  card.appendChild(name);
+
+  return card;
+}
+
+function startCelebrationOverlay() {
+  const overlay = document.getElementById("celebration-overlay");
+  const intro = document.getElementById("celebration-intro");
+  const introLogo = document.getElementById("celebration-intro-logo");
+  const introName = document.getElementById("celebration-intro-name");
+  const title = document.getElementById("celebration-title");
+  const winnersContainer = document.getElementById("celebration-winners");
+
+  if (!overlay || !winnersContainer) return;
+
+  const tournament = PRODE_WINNERS.find((entry) => entry.id === "wc-2026") || PRODE_WINNERS[0];
+  const orderedWinners = [...(tournament?.winners || [])].sort((a, b) => a.place - b.place);
+
+  if (introLogo && introName && tournament) {
+    introLogo.innerHTML = "";
+    if (tournament.logo) {
+      const logo = document.createElement("img");
+      logo.src = tournament.logo;
+      logo.alt = `${tournament.tournament} ${tournament.edition}`;
+      logo.loading = "lazy";
+      introLogo.appendChild(logo);
+    } else {
+      introLogo.textContent = TYPE_ICONS[tournament.type] || "⚽";
+    }
+    introName.textContent = `${tournament.tournament} ${tournament.edition}`;
+  }
+
+  winnersContainer.innerHTML = "";
+  orderedWinners.forEach((winner, index) => {
+    const card = createCelebrationWinnerCard(winner, index + 1);
+    winnersContainer.appendChild(card);
+  });
+
+  const sparkCount = 6;
+  for (let i = 0; i < sparkCount; i += 1) {
+    const spark = document.createElement("div");
+    spark.className = `celebration-overlay__spark celebration-overlay__spark--${i + 1}`;
+    overlay.appendChild(spark);
+  }
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("visible");
+  });
+
+  const cards = Array.from(winnersContainer.children);
+  const [first, second, third] = cards;
+
+  const revealSequence = () => {
+    window.setTimeout(() => {
+      if (intro) intro.classList.add("is-hidden");
+      if (title) title.classList.add("visible");
+      winnersContainer.classList.add("visible");
+    }, 2200);
+
+    if (first) {
+      window.setTimeout(() => first.classList.add("active"), 2600);
+    }
+    if (second) {
+      window.setTimeout(() => second.classList.add("active"), 3600);
+    }
+    if (third) {
+      window.setTimeout(() => third.classList.add("active"), 4600);
+    }
+
+    window.setTimeout(() => {
+      cards.forEach((card) => card.classList.add("podium"));
+    }, 5600);
+  };
+
+  revealSequence();
+
+  window.setTimeout(() => {
+    overlay.classList.add("hidden");
+  }, 10000);
 }
 
 function updateStats(data) {
@@ -205,6 +489,7 @@ function init() {
 
   cards.forEach((card) => container.appendChild(card));
 
+  startCelebrationOverlay();
   updateStats(sorted);
   setupFilters(cards);
   setupScrollReveal(cards);
