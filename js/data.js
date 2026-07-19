@@ -12,8 +12,26 @@ const PRODE_WINNERS = [
     logo: "assets/img/mundial_2026.jpg",
     logoPosition: "center",
     winner: {
-      name: "Por definir",
+      name: "Javier Granados",
+      photo: "assets/img/javier_granados.png",
     },
+    winners: [
+      {
+        place: 1,
+        name: "Javier Granados",
+        photo: "assets/img/javier_granados.png",
+      },
+      {
+        place: 2,
+        name: "Pedro Romero",
+        photo: "assets/img/pedro_romero.png",
+      },
+      {
+        place: 3,
+        name: "Andrés Granados",
+        photo: "assets/img/andres_granados.png",
+      },
+    ],
   },
   {
     id: "mcc-2025",

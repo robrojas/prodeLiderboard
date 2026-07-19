@@ -50,6 +50,62 @@ function createInitialsEl(name) {
   return el;
 }
 
+function createPodiumInitialsEl(name, variant) {
+  const el = document.createElement("div");
+  el.className = `card__podium-avatar-initials card__podium-avatar-initials--${variant}`;
+  el.textContent = getInitials(name);
+  el.setAttribute("aria-hidden", "true");
+  return el;
+}
+
+function createPodiumAvatar(winner, variant) {
+  const avatar = document.createElement("div");
+  avatar.className = `card__podium-avatar card__podium-avatar--${variant}`;
+
+  if (winner.photo) {
+    const img = document.createElement("img");
+    img.src = winner.photo;
+    img.alt = `Foto de ${winner.name}`;
+    img.loading = "lazy";
+    img.onerror = () => {
+      avatar.innerHTML = "";
+      avatar.appendChild(createPodiumInitialsEl(winner.name, variant));
+    };
+    avatar.appendChild(img);
+  } else {
+    avatar.appendChild(createPodiumInitialsEl(winner.name, variant));
+  }
+
+  return avatar;
+}
+
+function createPodiumWinner(winner, variant) {
+  const item = document.createElement("div");
+  item.className = `card__podium-item card__podium-item--${variant}`;
+
+  item.appendChild(createPodiumAvatar(winner, variant));
+
+  const info = document.createElement("div");
+  info.className = "card__podium-info";
+
+  const place = document.createElement("span");
+  place.className = `card__podium-place card__podium-place--${variant}`;
+  place.textContent = `${winner.place}º`;
+  info.appendChild(place);
+
+  const name = document.createElement("p");
+  name.className = `card__podium-name card__podium-name--${variant}`;
+  name.textContent = winner.name;
+  info.appendChild(name);
+
+  const stage = document.createElement("div");
+  stage.className = `card__podium-stage card__podium-stage--${variant}`;
+  info.appendChild(stage);
+
+  item.appendChild(info);
+  return item;
+}
+
 function createTournamentVisual(entry) {
   const wrap = document.createElement("div");
   wrap.className = `card__tournament card__tournament--${entry.type}`;
@@ -111,39 +167,55 @@ function createFallback(type) {
 
 function createCard(entry) {
   const card = document.createElement("article");
-  card.className = "card";
+  card.className = `card${entry.winners && entry.winners.length ? " card--wide" : ""}`;
   card.dataset.type = entry.type;
   card.dataset.year = entry.year;
 
   card.appendChild(createTournamentVisual(entry));
 
-  const winnerSection = document.createElement("div");
-  winnerSection.className = "card__winner";
+  if (entry.winners && entry.winners.length) {
+    const podium = document.createElement("div");
+    podium.className = "card__podium";
 
-  winnerSection.appendChild(createAvatar(entry.winner));
+    entry.winners
+      .slice()
+      .sort((a, b) => a.place - b.place)
+      .forEach((winner) => {
+        const variant = winner.place === 1 ? "1" : winner.place === 2 ? "2" : "3";
+        podium.appendChild(createPodiumWinner(winner, variant));
+      });
 
-  const info = document.createElement("div");
-  info.className = "card__winner-info";
+    card.appendChild(podium);
+  } else {
+    const winnerSection = document.createElement("div");
+    winnerSection.className = "card__winner";
 
-  const label = document.createElement("p");
-  label.className = "card__winner-label";
-  label.textContent = "Campeón del prode";
-  info.appendChild(label);
+    winnerSection.appendChild(createAvatar(entry.winner));
 
-  const name = document.createElement("p");
-  name.className = "card__winner-name";
-  name.textContent = entry.winner.name;
-  info.appendChild(name);
+    const info = document.createElement("div");
+    info.className = "card__winner-info";
 
-  winnerSection.appendChild(info);
+    const label = document.createElement("p");
+    label.className = "card__winner-label";
+    label.textContent = "Campeón del prode";
+    info.appendChild(label);
 
-  const crown = document.createElement("span");
-  crown.className = "card__crown";
-  crown.textContent = "👑";
-  crown.setAttribute("aria-hidden", "true");
-  winnerSection.appendChild(crown);
+    const name = document.createElement("p");
+    name.className = "card__winner-name";
+    name.textContent = entry.winner.name;
+    info.appendChild(name);
 
-  card.appendChild(winnerSection);
+    winnerSection.appendChild(info);
+
+    const crown = document.createElement("span");
+    crown.className = "card__crown";
+    crown.textContent = "👑";
+    crown.setAttribute("aria-hidden", "true");
+    winnerSection.appendChild(crown);
+
+    card.appendChild(winnerSection);
+  }
+
   return card;
 }
 
